@@ -2,8 +2,16 @@
 
 Kotlin / Compose Multiplatform app targeting **Android + iOS**.
 
-- **Modules:** `androidApp` (Android application), `shared` (KMP library: `commonMain`,
-  `androidMain`, `iosMain`, plus `commonTest` / `androidHostTest` / `iosTest`).
+- **Modules:** `androidApp` (Android application) + a KMP module tree — `:shared` is the umbrella
+  (CMP shell + Nav3/Koin wiring; produces the iOS `Shared` framework), depending on library modules:
+  `:core:{crypto,model,database,config}`, `:messaging:{transport,smp}`, `:lightning`,
+  `:feature:{chat,wallet,payinchat}`. Every module uses the AGP KMP library plugin
+  (`androidLibrary {}`) with `commonMain`/`androidMain`/`iosMain` + `commonTest`/`androidHostTest`/`iosTest`.
+  (The plan calls the umbrella `:app`; it is currently `:shared` — an optional rename is a follow-up.)
+- **Environments:** `-Penv=regtest|signet|mainnet` (default regtest) is the single source of truth.
+  It selects the `:core:config` BuildKonfig values and locks `:androidApp` to the matching flavor —
+  **exactly one env per Gradle invocation**. Network endpoints live ONLY in `:core:config`
+  (`scripts/no-hardcoded-endpoints.sh` guards the rest). Never commit real mainnet endpoints.
 - **iOS entry point:** `iosApp/` (Xcode project; add SwiftUI here).
 - **Package / applicationId:** `com.androdevlinux.satschat`.
 - **Toolchain:** Kotlin 2.4.0, AGP 9.0.1, Compose Multiplatform 1.11.1, minSdk 24 / compileSdk 36.
@@ -13,10 +21,17 @@ Kotlin / Compose Multiplatform app targeting **Android + iOS**.
 
 | Task | Command |
 |------|---------|
-| Android debug build | `./gradlew :androidApp:assembleDebug` |
-| Shared unit tests (Android host) | `./gradlew :shared:testAndroidHostTest` |
-| iOS tests | `./gradlew :shared:iosSimulatorArm64Test` |
+| Verify env matrix | `./gradlew verifyEnvMatrix -Penv=regtest` |
+| Android debug build (regtest) | `./gradlew :androidApp:assembleRegtestDebug -Penv=regtest` |
+| Unit tests (JVM host, all modules) | `./gradlew testAndroidHostTest -Penv=regtest` |
+| iOS tests | `./gradlew iosSimulatorArm64Test -Penv=regtest` |
+| iOS framework | `./gradlew :shared:linkDebugFrameworkIosSimulatorArm64 -Penv=regtest` |
+| Endpoint guard | `bash scripts/no-hardcoded-endpoints.sh` |
 | iOS app | open `iosApp/` in Xcode and run |
+
+There is no Desktop/JVM target, so JVM-host testing runs via `testAndroidHostTest` (not `jvmTest`).
+`:androidApp` is locked to the `-Penv` flavor, so build the flavor whose env you pass (e.g.
+`-Penv=signet :androidApp:assembleSignetDebug`). `mainnetDebug` only builds with `CI=true`.
 
 ## Git workflow (enforced by the skills)
 

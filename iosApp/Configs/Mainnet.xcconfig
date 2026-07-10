@@ -1,0 +1,7 @@
+// Mainnet env (production). Used by the Debug-Mainnet and Release-Mainnet build configurations.
+#include "../Configuration/Config.xcconfig"
+
+SATSCHAT_ENV = mainnet
+PRODUCT_NAME = SatsChat
+PRODUCT_BUNDLE_IDENTIFIER = com.androdevlinux.satschat
+SATSCHAT_DEEPLINK_SCHEME = satschat

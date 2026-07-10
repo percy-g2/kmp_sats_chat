@@ -51,14 +51,20 @@ Read-only inspection (`git status`, `git diff`, `git log`, `gh pr view/diff/list
 
 Used to pick the Conventional-Commits `scope` and the PR "platforms touched" line.
 
+The project is a multi-module KMP tree: the `:androidApp` application, the `:shared` umbrella (the
+CMP shell + iOS framework producer), and library modules under `core/`, `messaging/`, `lightning`,
+and `feature/`. Paths below use `**/src/...` so they match every module's source sets.
+
 | Scope | Paths |
 |-------|-------|
-| `android` | `androidApp/**`, `shared/src/androidMain/**`, `shared/src/androidHostTest/**` |
-| `ios` | `iosApp/**`, `shared/src/iosMain/**`, `shared/src/iosTest/**` |
-| `shared` | `shared/src/commonMain/**`, `shared/src/commonTest/**`, `shared/src/commonMain/composeResources/**` |
-| `build` (scope omitted) | root Gradle files (`build.gradle.kts`, `settings.gradle.kts`, `gradle.properties`), `gradle/libs.versions.toml`, `gradlew`, `gradlew.bat`, `gradle/wrapper/**` |
+| `android` | `androidApp/**`, `**/src/androidMain/**`, `**/src/androidHostTest/**` |
+| `ios` | `iosApp/**`, `**/src/iosMain/**`, `**/src/iosTest/**` |
+| `shared` | `**/src/commonMain/**`, `**/src/commonTest/**`, `**/src/commonMain/composeResources/**` |
+| `build` (scope omitted) | root Gradle files (`build.gradle.kts`, `settings.gradle.kts`, `gradle.properties`), every module `build.gradle.kts`, `gradle/libs.versions.toml`, `gradlew`, `gradlew.bat`, `gradle/wrapper/**`, `build-logic/**`, `tooling/**`, `scripts/**`, `.github/**` |
 
-If a change spans multiple scopes, **omit the scope** (or pick the dominant one by file count).
+If a change spans multiple scopes, **omit the scope** (or pick the dominant one by file count). You
+may also use a finer scope matching a module area (e.g. `crypto`, `smp`, `lightning`, `wallet`) when
+the change is confined to one module.
 
 ---
 
