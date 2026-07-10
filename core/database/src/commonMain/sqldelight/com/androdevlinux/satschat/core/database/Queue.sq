@@ -1,0 +1,17 @@
+CREATE TABLE queue (
+    id TEXT NOT NULL PRIMARY KEY,
+    connectionId TEXT NOT NULL,
+    direction TEXT NOT NULL,
+    server TEXT NOT NULL,
+    rotatedAt INTEGER,
+    FOREIGN KEY(connectionId) REFERENCES connection(id)
+);
+
+insertQueue:
+INSERT INTO queue(id, connectionId, direction, server, rotatedAt) VALUES (?, ?, ?, ?, ?);
+
+selectQueuesForConnection:
+SELECT * FROM queue WHERE connectionId = ?;
+
+markQueueRotated:
+UPDATE queue SET rotatedAt = ? WHERE id = ?;

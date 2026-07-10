@@ -1,0 +1,12 @@
+CREATE TABLE ratchet_state (
+    connectionId TEXT NOT NULL PRIMARY KEY,
+    state BLOB NOT NULL,
+    updatedAt INTEGER NOT NULL,
+    FOREIGN KEY(connectionId) REFERENCES connection(id)
+);
+
+upsertRatchetState:
+INSERT OR REPLACE INTO ratchet_state(connectionId, state, updatedAt) VALUES (?, ?, ?);
+
+selectRatchetState:
+SELECT state FROM ratchet_state WHERE connectionId = ?;
