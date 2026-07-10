@@ -1,0 +1,7 @@
+// Regtest env. Used by the Debug-Regtest and Release-Regtest build configurations.
+#include "../Configuration/Config.xcconfig"
+
+SATSCHAT_ENV = regtest
+PRODUCT_NAME = SatsChat RT
+PRODUCT_BUNDLE_IDENTIFIER = com.androdevlinux.satschat.rt
+SATSCHAT_DEEPLINK_SCHEME = satschat-rt

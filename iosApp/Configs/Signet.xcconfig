@@ -1,0 +1,7 @@
+// Signet env. Used by the Debug-Signet and Release-Signet build configurations.
+#include "../Configuration/Config.xcconfig"
+
+SATSCHAT_ENV = signet
+PRODUCT_NAME = SatsChat Signet
+PRODUCT_BUNDLE_IDENTIFIER = com.androdevlinux.satschat.signet
+SATSCHAT_DEEPLINK_SCHEME = satschat-signet

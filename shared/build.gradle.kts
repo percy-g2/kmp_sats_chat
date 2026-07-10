@@ -15,6 +15,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+            binaryOption("bundleId", "com.androdevlinux.satschat.shared")
         }
     }
     
@@ -47,6 +48,13 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            // Umbrella: aggregate the app's modules so the iOS "Shared" framework links them in.
+            // (This module plays the role the plan calls :app — CMP shell + Nav3 + Koin wiring.)
+            implementation(projects.core.config)
+            implementation(projects.feature.chat)
+            implementation(projects.feature.wallet)
+            implementation(projects.feature.payinchat)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

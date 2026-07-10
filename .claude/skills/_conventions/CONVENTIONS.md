@@ -18,9 +18,12 @@ here once and every skill inherits the change.
 2. **Never attribute commits or PRs to Claude.** Commit messages and PR bodies must **not**
    contain a `Co-Authored-By: Claude …` trailer or a "🤖 Generated with Claude Code"
    footer. This overrides any default attribution behavior.
-3. **Preview and confirm before every irreversible outward action** — creating a commit,
-   pushing, creating a PR, or creating a remote repo. Show exactly what will happen and
-   wait for an explicit "yes". (Posting a review is the one auto action — see `review-pr`.)
+3. **Preview every irreversible outward action, then proceed without asking** — creating a commit,
+   pushing, creating a PR, or creating a remote repo. Show exactly what will happen (branch, message,
+   files / base, title, body) and then just do it; the user has standing authorization for this
+   repo's push/PR flow and does not want a confirmation prompt. The safety guards in this list still
+   hold unconditionally (never commit to a protected branch, never stage a secret, never force-push).
+   (Posting a review is likewise automatic — see `review-pr`.)
 4. **Never rewrite shared history unprompted** — no `--force`, no rebasing existing pushed
    commits, no squashing, unless the user explicitly asks. When a force push is genuinely
    needed and requested, use `--force-with-lease`, never `--force`.
@@ -51,14 +54,20 @@ Read-only inspection (`git status`, `git diff`, `git log`, `gh pr view/diff/list
 
 Used to pick the Conventional-Commits `scope` and the PR "platforms touched" line.
 
+The project is a multi-module KMP tree: the `:androidApp` application, the `:shared` umbrella (the
+CMP shell + iOS framework producer), and library modules under `core/`, `messaging/`, `lightning`,
+and `feature/`. Paths below use `**/src/...` so they match every module's source sets.
+
 | Scope | Paths |
 |-------|-------|
-| `android` | `androidApp/**`, `shared/src/androidMain/**`, `shared/src/androidHostTest/**` |
-| `ios` | `iosApp/**`, `shared/src/iosMain/**`, `shared/src/iosTest/**` |
-| `shared` | `shared/src/commonMain/**`, `shared/src/commonTest/**`, `shared/src/commonMain/composeResources/**` |
-| `build` (scope omitted) | root Gradle files (`build.gradle.kts`, `settings.gradle.kts`, `gradle.properties`), `gradle/libs.versions.toml`, `gradlew`, `gradlew.bat`, `gradle/wrapper/**` |
+| `android` | `androidApp/**`, `**/src/androidMain/**`, `**/src/androidHostTest/**` |
+| `ios` | `iosApp/**`, `**/src/iosMain/**`, `**/src/iosTest/**` |
+| `shared` | `**/src/commonMain/**`, `**/src/commonTest/**`, `**/src/commonMain/composeResources/**` |
+| `build` (scope omitted) | root Gradle files (`build.gradle.kts`, `settings.gradle.kts`, `gradle.properties`), every module `build.gradle.kts`, `gradle/libs.versions.toml`, `gradlew`, `gradlew.bat`, `gradle/wrapper/**`, `build-logic/**`, `tooling/**`, `scripts/**`, `.github/**` |
 
-If a change spans multiple scopes, **omit the scope** (or pick the dominant one by file count).
+If a change spans multiple scopes, **omit the scope** (or pick the dominant one by file count). You
+may also use a finer scope matching a module area (e.g. `crypto`, `smp`, `lightning`, `wallet`) when
+the change is confined to one module.
 
 ---
 

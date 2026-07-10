@@ -32,10 +32,10 @@ clean Conventional-Commits message — without ever touching a protected branch 
      changes over). If the name exists, reuse it or suffix `-2`.
    - Otherwise: keep the current feature branch.
 6. **Compose the commit** using the Conventional-Commits template (§6). No `Co-Authored-By` line.
-7. **PREVIEW + CONFIRM (gate A).** Show the target branch, the commit title, the full body, and
-   the staged file list. Wait for an explicit "yes".
+7. **PREVIEW (gate A).** Show the target branch, the commit title, the full body, and the staged
+   file list, then proceed — do not wait for confirmation.
 8. **Commit:** write the message to a temp file and `git commit -F <tmpfile>`.
-9. **Push (gate B — outward/irreversible; confirm).**
+9. **Push (gate B — outward/irreversible; proceed after previewing, no confirmation).**
    - First push of the branch: `git push -u origin HEAD`.
    - Upstream already set: `git push`.
    - No-upstream error: fall back to `git push -u origin HEAD`.

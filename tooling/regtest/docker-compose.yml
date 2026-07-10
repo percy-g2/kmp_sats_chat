@@ -1,0 +1,63 @@
+# SatsChat regtest stack: bitcoind + electrs + eclair (+ our own SMP relay, Phase 2).
+# TEST-ONLY. Throwaway deterministic secrets only — never reuse these anywhere real.
+# NOTE: image tags below are indicative and MUST be pinned/verified before first use. This stack
+# has not been run in the authoring environment (no Docker there).
+services:
+  bitcoind:
+    image: polarlightning/bitcoind:27.0
+    command:
+      - -regtest=1
+      - -server=1
+      - -txindex=1
+      - -rpcbind=0.0.0.0
+      - -rpcallowip=0.0.0.0/0
+      - -rpcuser=satschat
+      - -rpcpassword=satschat-regtest-TEST-ONLY
+      - -fallbackfee=0.0002
+      - -zmqpubrawblock=tcp://0.0.0.0:28332
+      - -zmqpubrawtx=tcp://0.0.0.0:28333
+    ports:
+      - "18443:18443" # RPC
+      - "28332:28332"
+      - "28333:28333"
+
+  electrs:
+    image: getumbrel/electrs:v0.10.5
+    depends_on: [bitcoind]
+    environment:
+      ELECTRS_NETWORK: regtest
+      ELECTRS_DAEMON_RPC_ADDR: bitcoind:18443
+      ELECTRS_DAEMON_P2P_ADDR: bitcoind:18444
+      ELECTRS_ELECTRUM_RPC_ADDR: 0.0.0.0:50001
+      ELECTRS_COOKIE: satschat:satschat-regtest-TEST-ONLY
+    ports:
+      - "50001:50001" # Electrum protocol (plaintext, regtest)
+
+  eclair:
+    image: acinq/eclair:v0.14.0
+    depends_on: [bitcoind, electrs]
+    environment:
+      JAVA_OPTS: >-
+        -Declair.chain=regtest
+        -Declair.bitcoind.host=bitcoind
+        -Declair.bitcoind.rpcport=18443
+        -Declair.bitcoind.rpcuser=satschat
+        -Declair.bitcoind.rpcpassword=satschat-regtest-TEST-ONLY
+        -Declair.bitcoind.zmqblock=tcp://bitcoind:28332
+        -Declair.bitcoind.zmqtx=tcp://bitcoind:28333
+        -Declair.api.enabled=true
+        -Declair.api.binding-ip=0.0.0.0
+        -Declair.api.password=satschat-regtest-TEST-ONLY
+        -Declair.features.option_dual_fund=optional
+    ports:
+      - "8080:8080"  # eclair API
+      - "9735:9735"  # lightning p2p
+
+  # Our own SMP relay speaking SatsChat's wire format (Phase 2). Wire-compat with SimpleX is NOT a
+  # goal, so an upstream smp-server won't interoperate. Uncomment + point `build` at the relay module
+  # once it exists (see the plan's "DECISION NEEDED — SMP relay server").
+  # smp-server:
+  #   build: ../../relay        # our reference relay (Kotlin/JVM or Rust), TBD
+  #   depends_on: [bitcoind]
+  #   ports:
+  #     - "5223:5223"           # SMP over TLS

@@ -10,6 +10,19 @@ local.properties
 captures
 .externalNativeBuild
 .cxx
+
+# Secrets — never commit (belt-and-suspenders with the git-workflow skill denylist)
+*.jks
+*.keystore
+keystore.properties
+google-services.json
+GoogleService-Info.plist
+*.p8
+*.p12
+*.mobileprovision
+.env
+.env.*
+
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
