@@ -34,8 +34,8 @@ Goal: open a well-formed PR from the current feature branch to the right base br
 7. **Compose** the title (Conventional Commits, same style as the commit) and the body from the
    PR template (§6). Drop the iOS or Android test/screenshot rows when that surface is untouched.
    No "Generated with Claude Code" footer.
-8. **PREVIEW + CONFIRM (gate — outward/irreversible).** Show base, head, title, and full body.
-   Wait for an explicit "yes".
+8. **PREVIEW (outward/irreversible).** Show base, head, title, and full body, then proceed — do not
+   wait for confirmation.
 9. **Create:** write the body to a temp file and
    `gh pr create --base <base> --head <branch> --title "<title>" --body-file <tmpfile>`
    (add `--draft` only if the user asked).

@@ -1,21 +1,21 @@
 ---
 name: pcr
-description: One-shot "push, PR, review" orchestrator — runs push-code, then create-pr, captures the new PR number, then review-pr on it. Stops for a preview + confirmation before each irreversible action (commit, push, PR creation); auto-posts the review; never merges. Use when the user says pcr, /pcr, "push create and review", or "do the whole PR flow".
+description: One-shot "push, PR, review" orchestrator — runs push-code, then create-pr, captures the new PR number, then review-pr on it. Previews each irreversible action (commit, push, PR creation) then proceeds without asking; auto-posts the review; never merges. Use when the user says pcr, /pcr, "push create and review", or "do the whole PR flow".
 ---
 
 # pcr
 
 **First read `.claude/skills/_conventions/CONVENTIONS.md` and follow it.** This skill runs the
 `push-code`, `create-pr`, and `review-pr` skills in sequence — follow each one's `SKILL.md` in
-full, including its preview/confirm gates.
+full, including its previews (which proceed without confirmation).
 
 Goal: take the current working-tree changes all the way to a reviewed PR in one flow.
 
 ## Steps
 
 1. **Announce the plan** so the user knows the sequence: push-code → create-pr → review-pr.
-2. **Stage 1 — push-code.** Execute the `push-code` skill, including its confirm gates. If it
-   stops for any reason (nothing to commit, unresolved conflict, auth failure, user declines),
+2. **Stage 1 — push-code.** Execute the `push-code` skill, including its previews. If it
+   stops for any reason (nothing to commit, unresolved conflict, auth failure),
    stop `pcr` and report where it halted.
 3. **Stage 2 — create-pr.** Execute the `create-pr` skill on the branch push-code produced,
    including its confirm gate.
