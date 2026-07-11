@@ -1,7 +1,7 @@
 package com.androdevlinux.satschat.core.crypto
 
 /**
- * The Signal Double Ratchet (signal.org/docs/specifications/doubleratchet), ported faithfully onto
+ * The Signal Double Ratchet specification, ported faithfully onto
  * the KAT-verified [Crypto] primitives:
  *   DH        = X25519            (crypto.x25519* )
  *   KDF_RK    = HKDF-SHA256       (root chain: salt=RK, ikm=DH output)
