@@ -1,0 +1,3 @@
+package = sodium
+headers = sodium.h
+headerFilter = sodium.h sodium/**

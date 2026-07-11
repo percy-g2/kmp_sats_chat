@@ -8,6 +8,9 @@ kotlinxCoroutines = "1.10.2"
 ktor = "3.5.1"
 sqldelight = "2.3.2"
 sqlcipher = "4.9.0"
+lazysodium = "5.2.0"
+jna = "5.17.0"
+androidx-test = "1.7.0"
 androidx-activity = "1.13.0"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.19.0"
@@ -45,6 +48,11 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", 
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqlcipher-android = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlcipher" }
+# lazysodium-android + jna REQUIRE the @aar artifact type (Android .so); append @aar at the use site.
+lazysodium-android = { module = "com.goterl:lazysodium-android", version.ref = "lazysodium" }
+jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
