@@ -30,3 +30,7 @@ GoogleService-Info.plist
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# Vendored prebuilt libsodium iOS slices for the :core:crypto cinterop (binary; fetch via
+# tooling/fetch-libsodium-ios.sh). Not committed.
+core/crypto/src/nativeInterop/libsodium/

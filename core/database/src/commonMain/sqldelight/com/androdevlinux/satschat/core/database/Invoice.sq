@@ -1,0 +1,18 @@
+CREATE TABLE invoice (
+    paymentHash TEXT NOT NULL PRIMARY KEY,
+    connectionId TEXT,
+    bolt11 TEXT NOT NULL,
+    amountMsat INTEGER,
+    status TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+insertInvoice:
+INSERT INTO invoice(paymentHash, connectionId, bolt11, amountMsat, status, createdAt)
+VALUES (?, ?, ?, ?, ?, ?);
+
+selectInvoiceByHash:
+SELECT * FROM invoice WHERE paymentHash = ?;
+
+updateInvoiceStatus:
+UPDATE invoice SET status = ? WHERE paymentHash = ?;

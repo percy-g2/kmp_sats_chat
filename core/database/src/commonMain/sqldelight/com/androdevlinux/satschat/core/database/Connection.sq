@@ -1,0 +1,14 @@
+CREATE TABLE connection (
+    id TEXT NOT NULL PRIMARY KEY,
+    contactName TEXT,
+    createdAt INTEGER NOT NULL
+);
+
+insertConnection:
+INSERT INTO connection(id, contactName, createdAt) VALUES (?, ?, ?);
+
+selectAllConnections:
+SELECT * FROM connection ORDER BY createdAt;
+
+selectConnectionById:
+SELECT * FROM connection WHERE id = ?;

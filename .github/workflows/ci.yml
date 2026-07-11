@@ -54,14 +54,23 @@ jobs:
 
   ios:
     name: iOS (tests + framework + build-only)
-    runs-on: macos-latest
+    # Compose Multiplatform 1.11.1's iOS code references iOS 26 UIKit symbols (e.g.
+    # UIViewLayoutRegion), so the runner must ship the iOS 26 SDK (Xcode 26). The default
+    # macos-latest Xcode (16.4) is too old and fails :shared:linkDebugTestIosSimulatorArm64.
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
+      - name: Select latest Xcode (Compose MP 1.11 needs the iOS 26 SDK)
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
       - uses: actions/setup-java@v4
         with:
           distribution: corretto
           java-version: "21"
       - uses: gradle/actions/setup-gradle@v4
+      - name: Fetch libsodium iOS slices (:core:crypto cinterop)
+        run: bash tooling/fetch-libsodium-ios.sh
       - name: Shared unit tests (iOS simulator)
         run: ./gradlew iosSimulatorArm64Test -Penv=regtest
       - name: Link iOS framework (regtest)

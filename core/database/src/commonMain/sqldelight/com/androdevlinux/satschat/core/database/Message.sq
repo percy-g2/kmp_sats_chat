@@ -1,0 +1,19 @@
+CREATE TABLE message (
+    id TEXT NOT NULL PRIMARY KEY,
+    connectionId TEXT NOT NULL,
+    direction TEXT NOT NULL,
+    body BLOB NOT NULL,
+    status TEXT NOT NULL,
+    createdAt INTEGER NOT NULL,
+    FOREIGN KEY(connectionId) REFERENCES connection(id)
+);
+
+insertMessage:
+INSERT INTO message(id, connectionId, direction, body, status, createdAt)
+VALUES (?, ?, ?, ?, ?, ?);
+
+selectMessagesForConnection:
+SELECT * FROM message WHERE connectionId = ? ORDER BY createdAt;
+
+updateMessageStatus:
+UPDATE message SET status = ? WHERE id = ?;
